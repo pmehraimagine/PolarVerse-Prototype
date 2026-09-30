@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PolarVerse – Polar Knowledge Hub (Prototype)</title>
+<style>
+:root{color-scheme:dark;--bg:#050b1c;--card:#0c1a35;--line:#1f3a66;--tx:#e8f1ff;--mut:#8ea6cc;--cy:#3fd8f0;--pu:#9a6bff;--gr:#4ee0a0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:radial-gradient(900px 400px at 85% -5%,#0f6b6a55,transparent),radial-gradient(700px 400px at 10% 0,#4a2d9a44,transparent),var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:20px;padding:12px 24px;background:#050b1ccc;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.logo{font-weight:800;font-size:22px}.logo b{color:var(--pu)}
+nav{display:flex;gap:4px;flex-wrap:wrap;overflow-x:auto}
+nav button{background:none;border:0;color:var(--mut);padding:8px 12px;border-radius:8px;cursor:pointer;font:inherit}
+nav button:hover{color:var(--tx)}nav button.on{background:#16305c;color:var(--cy)}
+.sp{flex:1}
+.btn{background:linear-gradient(135deg,#1aa9d6,#7a55ff);border:0;color:#fff;padding:9px 16px;border-radius:10px;font:600 14px inherit;cursor:pointer}
+.btn.ghost{background:transparent;border:1px solid var(--cy);color:var(--cy)}
+main{max-width:1150px;margin:0 auto;padding:24px}
+.view{display:none}.view.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:2fr 1fr}.g4{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+@media(max-width:800px){.g2{grid-template-columns:1fr}}
+h1{font-size:34px;line-height:1.15;margin:6px 0}h2{font-size:20px;margin:0 0 12px}h3{margin:0 0 6px;font-size:16px}
+.mut{color:var(--mut)}.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:99px;background:#16305c;color:var(--cy);margin:2px 4px 2px 0}
+.hero{min-height:260px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(180deg,#0b244c00 30%,#050b1cf0),linear-gradient(120deg,#0e5f78,#2a3f9c 55%,#6d3fc4);position:relative;overflow:hidden}
+.hero svg{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+.hero>*{position:relative}
+.tl{display:flex;flex-direction:column;gap:6px}
+.tl button{display:flex;gap:10px;align-items:center;text-align:left;background:none;border:1px solid transparent;color:var(--tx);padding:8px;border-radius:10px;cursor:pointer;font:inherit}
+.tl button i{width:12px;height:12px;border-radius:50%;background:var(--line);flex:none}
+.tl button.on{border-color:var(--cy);background:#0f2a52}.tl button.on i{background:var(--cy);box-shadow:0 0 10px var(--cy)}
+.tile{aspect-ratio:4/3;border-radius:12px;display:flex;align-items:flex-end;padding:8px;font-size:12px;cursor:pointer;border:1px solid var(--line);transition:transform .15s}
+.tile:hover{transform:translateY(-3px)}
+input[type=search],select{background:#08132b;border:1px solid var(--line);color:var(--tx);padding:9px 12px;border-radius:10px;font:inherit;min-width:0}
+.chip{border:1px solid var(--line);background:none;color:var(--mut);padding:5px 12px;border-radius:99px;cursor:pointer;font:inherit;font-size:13px}
+.chip.on{background:var(--cy);color:#04213a;border-color:var(--cy)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 14px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}th{color:var(--mut);font-weight:500;font-size:13px}
+.wrap{overflow-x:auto}
+.stat{font-size:30px;font-weight:800;color:var(--cy)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.step{padding:12px;border:1px solid var(--line);border-radius:12px;background:#08132b;opacity:.45;transition:.3s}
+.step.done{opacity:1;border-color:var(--gr)}.step b{color:var(--cy)}
+.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:20;padding:16px}
+.modal.on{display:flex}.modal .card{width:min(900px,100%);max-height:92vh;overflow:auto}
+.post{margin:auto;border-radius:14px;position:relative;overflow:hidden;background:linear-gradient(150deg,#0e5f78,#2a3f9c 55%,#6d3fc4);padding:16px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;transition:all .3s}
+.post .qr{position:absolute;right:10px;bottom:10px;background:#fff;padding:4px;border-radius:6px;width:54px;height:54px}
+.post small{opacity:.8}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gr);color:#032;padding:10px 18px;border-radius:99px;font-weight:600;opacity:0;pointer-events:none;transition:.3s;z-index:30}
+.toast.on{opacity:1}
+footer{text-align:center;color:var(--mut);padding:30px 0;font-size:13px}
+</style></head><body>
+<header>
+ <div class="logo">Polar<b>Verse</b></div>
+ <nav id="nav"></nav><div class="sp"></div>
+ <button class="btn" onclick="openPost()">✦ Create Social Post</button>
+</header>
+<main>
+
+<section class="view on" id="v-exp">
+ <div class="card hero">
+  <svg viewBox="0 0 800 260" preserveAspectRatio="none"><path d="M0 200 L120 120 L200 170 L330 70 L450 160 L560 100 L700 170 L800 130 V260 H0Z" fill="#d8ecff33"/><path d="M0 230 L150 170 L260 215 L400 140 L560 210 L800 160 V260 H0Z" fill="#d8ecff55"/></svg>
+  <span class="tag" style="width:max-content">Featured Expedition</span>
+  <h1>Antarctic Research Expedition 2024</h1>
+  <div class="mut">Exploring Climate, Ice &amp; Biogeochemistry · 20 days · 41 datasets · 12 publications</div>
+ </div>
+ <div class="grid g2" style="margin-top:16px">
+  <div class="grid">
+   <div class="card"><h2>Key Observations <span class="mut" id="obsDay" style="font-size:14px"></span></h2>
+    <svg id="chart" viewBox="0 0 520 190" style="width:100%"></svg>
+    <p id="obsTxt" class="mut" style="margin:8px 0 0"></p></div>
+   <div class="card"><h2>Gallery</h2><div class="grid g4" id="galMini" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"></div></div>
+  </div>
+  <div class="grid" style="align-content:start">
+   <div class="card"><h2>Timeline</h2><div class="tl" id="tl"></div></div>
+   <div class="card"><h2>Downloads</h2>
+    <div id="dlBox" class="mut"></div>
+    <button class="btn" style="margin-top:12px;width:100%" onclick="dlPack()">⬇ Download Data Pack</button>
+    <p class="mut" style="font-size:12px;margin:8px 0 0">Includes citation + credit line automatically.</p></div>
+  </div>
+ </div>
+ <div class="grid g3" style="margin-top:16px">
+  <div class="card"><div class="stat">1 click</div>to publish content</div>
+  <div class="card"><div class="stat">100%</div>traceable data</div>
+  <div class="card"><div class="stat">10×</div>faster content creation</div>
+ </div>
+</section>
+
+<section class="view" id="v-pub"><h2>Publications</h2>
+ <div class="row"><input type="search" id="pubQ" placeholder="Search title, author, topic…" oninput="renderPub()" style="flex:1"></div>
+ <div class="grid" id="pubList"></div></section>
+
+<section class="view" id="v-inst"><h2>Institutional Activities</h2><div class="grid g3" id="instList"></div></section>
+
+<section class="view" id="v-data"><h2>Data Library</h2>
+ <div class="row" id="dataChips"></div>
+ <div class="card wrap"><table><thead><tr><th></th><th>Dataset</th><th>Type</th><th>Year</th><th>Size</th></tr></thead><tbody id="dataRows"></tbody></table></div>
+ <div class="row" style="margin-top:14px"><button class="btn" onclick="dlPack()">⬇ Build data pack (<span id="selN">0</span> selected)</button><span class="mut" style="font-size:13px">CSV · PNG/SVG graphs · high-res images · citation</span></div></section>
+
+<section class="view" id="v-gal"><h2>Gallery</h2><div class="row" id="galChips"></div><div class="grid g4" id="galAll"></div></section>
+
+<section class="view" id="v-cur"><h2>Curator Dashboard</h2>
+ <p class="mut">Upload → AI auto-sorting &amp; tagging → auto graphs &amp; summaries → human review → publish.</p>
+ <div class="card"><div class="steps" id="steps"></div>
+  <div class="row" style="margin-top:16px"><button class="btn" onclick="runPipe()">⬆ Simulate upload (reports, datasets, images, videos)</button></div>
+  <div id="queue"></div></div></section>
+</main>
+<footer>Team Hunter_gkv_98 · FET, Gurukul Kangri Haridwar · SIH 2026 – interactive prototype with sample data</footer>
+
+<div class="modal" id="modal" onclick="if(event.target===this)this.classList.remove('on')"><div class="card">
+ <div class="row"><h2 style="margin:0">Social Post Generator</h2><div class="sp"></div><button class="chip" onclick="modal.classList.remove('on')">✕ Close</button></div>
+ <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+  <div><div id="post" class="post"></div></div>
+  <div>
+   <div class="row" id="fmts"></div>
+   <div class="row" id="langs"></div>
+   <label class="mut">Template</label><br><select id="tpl" onchange="drawPost()"><option>Ocean Aurora</option><option>Deep Ice</option><option>Sunrise Polar</option></select>
+   <p class="mut" style="margin-bottom:4px">AI caption</p>
+   <div id="cap" style="background:#08132b;border:1px solid var(--line);border-radius:10px;padding:10px"></div>
+   <div id="hash" style="margin:8px 0"></div>
+   <p class="mut" style="font-size:12px">Auto alt-text: <span id="alt"></span></p>
+   <div class="row"><button class="btn" onclick="toast('PNG exported (demo)')">Export PNG</button><button class="btn ghost" onclick="copyCap()">Copy caption</button></div>
+  </div></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const views=[["exp","Expeditions"],["pub","Publications"],["inst","Institutional Activities"],["data","Data Library"],["gal","Gallery"],["cur","Curator"]];
+$("#nav").innerHTML=views.map(([k,n])=>`<button data-k="${k}">${n}</button>`).join("");
+function go(k){$$(".view").forEach(v=>v.classList.toggle("on",v.id=="v-"+k));$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.k==k));scrollTo(0,0)}
+$("#nav").onclick=e=>e.target.dataset.k&&go(e.target.dataset.k);go("exp");
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),2000)}
+
+// Timeline + chart
+const days=[{d:"Day 1",t:"Departure",v:[-1.2,-1.4,-1.3,-1.6],o:"Departed Cape Town; open-water baseline SST −1.2 °C."},
+{d:"Day 5",t:"Sea Ice Sampling",v:[-1.8,-1.9,-2.1,-2.4],o:"Ice cores collected at 3 stations; chlorophyll rises near ice edge."},
+{d:"Day 12",t:"Garner Survey",v:[-2.3,-2.6,-2.2,-2.9],o:"Glacier survey complete; meltwater salinity anomaly recorded."},
+{d:"Day 20",t:"Return",v:[-1.9,-1.6,-1.5,-1.3],o:"Return leg; 41 datasets uploaded for curator review."}];
+const pts=days.flatMap((x,i)=>x.v.map((y,j)=>({y,i})));let cur=0;
+$("#tl").innerHTML=days.map((x,i)=>`<button data-i="${i}"><i></i><span><b>${x.d}</b><br><span class="mut">${x.t}</span></span></button>`).join("");
+$("#tl").onclick=e=>{const b=e.target.closest("button");b&&sel(+b.dataset.i)};
+function sel(i){cur=i;$$("#tl button").forEach((b,j)=>b.classList.toggle("on",j==i));$("#obsDay").textContent="· "+days[i].d+" · "+days[i].t;$("#obsTxt").textContent=days[i].o;draw()}
+function draw(){const W=520,H=190,mn=-3.2,mx=-1,x=k=>20+k*(W-40)/(pts.length-1),y=v=>15+(v-mx)*(H-40)/(mn-mx);
+ let s=[0,1,2,3].map(g=>`<line x1="20" x2="${W-20}" y1="${y(mx-g*.7)}" y2="${y(mx-g*.7)}" stroke="#1f3a66"/>`).join("");
+ s+=`<rect x="${x(cur*4)-4}" y="10" width="${x(cur*4+3)-x(cur*4)+8}" height="${H-30}" rx="8" fill="#3fd8f022"/>`;
+ s+=`<polyline fill="none" stroke="#3fd8f0" stroke-width="2.5" points="${pts.map((p,k)=>x(k)+","+y(p.y)).join(" ")}"/>`;
+ s+=pts.map((p,k)=>`<circle cx="${x(k)}" cy="${y(p.y)}" r="${p.i==cur?5:3}" fill="${p.i==cur?'#9a6bff':'#3fd8f0'}"/>`).join("");
+ s+=days.map((d,i)=>`<text x="${x(i*4+1.5)}" y="${H-4}" fill="#8ea6cc" font-size="11" text-anchor="middle">${d.d}</text>`).join("");
+ $("#chart").innerHTML=s+`<text x="22" y="12" fill="#8ea6cc" font-size="10">Sea-surface temperature (°C, sample data)</text>`}
+sel(0);
+
+// Gallery
+const gp=[["Icebreaker at the ice edge","ship",["#0e5f78","#2a3f9c"]],["Sea ice floes","ice",["#5fb8d8","#1c4f8a"]],["Aurora over camp","aurora",["#0f8a6a","#4a2d9a"]],["Emperor penguins","wildlife",["#26456f","#0a1a38"]],["Glacier front","ice",["#8fd0f0","#2b5f9c"]],["Ice core lab","lab",["#3a3f8f","#0c1a35"]],["Midnight sun","aurora",["#e0a060","#6d3fc4"]],["Sampling station","ship",["#1d6f8f","#0a2a4a"]]];
+const tile=(g)=>`<div class="tile" style="background:linear-gradient(140deg,${g[2][0]},${g[2][1]})" onclick="toast('Opened: ${g[0]}')">${g[0]}</div>`;
+$("#galMini").innerHTML=gp.slice(0,6).map(tile).join("");
+let gf="All";function renderGal(){$("#galChips").innerHTML=["All","ship","ice","aurora","wildlife","lab"].map(c=>`<button class="chip ${c==gf?'on':''}" onclick="gf='${c}';renderGal()">${c}</button>`).join("");$("#galAll").innerHTML=gp.filter(g=>gf=="All"||g[1]==gf).map(tile).join("")}renderGal();
+
+// Data library
+const ds=[["Sea-ice thickness transects","CSV","2024","2.1 MB"],["CTD temperature & salinity","CSV","2024","5.4 MB"],["Chlorophyll-a maps","PNG","2024","8.8 MB"],["Glacier retreat graph","SVG","2023","310 KB"],["Krill acoustic survey","CSV","2023","12 MB"],["Expedition photos (high-res)","Images","2024","240 MB"],["Ice-core isotope series","CSV","2022","1.7 MB"],["Station map","SVG","2022","220 KB"]];
+let df="All",picked=new Set();
+function renderData(){$("#dataChips").innerHTML=["All","CSV","PNG","SVG","Images"].map(c=>`<button class="chip ${c==df?'on':''}" onclick="df='${c}';renderData()">${c}</button>`).join("");
+ $("#dataRows").innerHTML=ds.map((r,i)=>[r,i]).filter(([r])=>df=="All"||r[1]==df).map(([r,i])=>`<tr><td><input type="checkbox" ${picked.has(i)?'checked':''} onchange="this.checked?picked.add(${i}):picked.delete(${i});$('#selN').textContent=picked.size"></td><td>${r[0]}</td><td><span class="tag">${r[1]}</span></td><td>${r[2]}</td><td class="mut">${r[3]}</td></tr>`).join("")}renderData();
+$("#dlBox").innerHTML=["CSV files","PNG/SVG graphs","Images (high-res)","Citation"].map(x=>`<div>✓ ${x}</div>`).join("");
+function dlPack(){toast("Data pack ready: "+(picked.size||"all")+" item(s) + citation (demo)")}
+
+// Publications & institutional
+const pubs=[["Sea-ice decline and biogeochemical shifts in the Southern Ocean","Rao, Singh, Verma","2024","Climate"],["Microbial diversity under Antarctic ice shelves","Kumar, Das","2023","Biology"],["Glacier mass balance near Larsemann Hills","Sharma, Iyer","2023","Glaciology"],["Krill distribution and ocean fronts","Nair, Gupta","2022","Ecology"]];
+function renderPub(){const q=$("#pubQ").value.toLowerCase();$("#pubList").innerHTML=pubs.filter(p=>p.join(" ").toLowerCase().includes(q)).map(p=>`<div class="card"><h3>${p[0]}</h3><div class="mut">${p[1]} · ${p[2]}</div><span class="tag">${p[3]}</span><button class="chip" style="float:right" onclick="toast('Citation copied')">Cite</button></div>`).join("")||'<p class="mut">No results.</p>'}renderPub();
+$("#instList").innerHTML=[["Polar Science Outreach Week","Schools across 12 states joined live talks with expedition scientists.","Outreach"],["Ice-core workshop","Hands-on training for 60 students and early-career researchers.","Training"],["Open data hackathon","Teams built tools on institute-provided datasets.","Community"]].map(a=>`<div class="card"><span class="tag">${a[2]}</span><h3>${a[0]}</h3><p class="mut">${a[1]}</p></div>`).join("");
+
+// Curator pipeline
+const st=[["01","Upload","reports · datasets · images · videos"],["02","AI tagging","year · location · type · topic"],["03","Auto graphs","Pandas · Matplotlib · Plotly"],["04","Human review","curator approval"],["05","Publish","live on portal"]];
+$("#steps").innerHTML=st.map(s=>`<div class="step"><b>${s[0]}</b><h3>${s[1]}</h3><span class="mut">${s[2]}</span></div>`).join("");
+const files=[["sea_ice_2024.csv","2024 · Antarctica · Dataset · Sea ice"],["ship_deck.jpg","2024 · Weddell Sea · Image · Vessel"],["cruise_report.pdf","2024 · Antarctica · Report · Climate"]];
+function runPipe(){$("#queue").innerHTML="";$$(".step").forEach(s=>s.classList.remove("done"));
+ [0,1,2].forEach(i=>setTimeout(()=>$$(".step")[i].classList.add("done"),i*700));
+ setTimeout(()=>{$("#queue").innerHTML='<h3 style="margin-top:16px">Review queue</h3>'+files.map((f,i)=>`<div class="row card" id="q${i}" style="padding:10px"><b>${f[0]}</b><span class="mut">${f[1].split(" · ").map(t=>`<span class="tag">${t}</span>`).join("")}</span><div class="sp"></div><button class="btn" onclick="approve(${i})">Approve</button></div>`).join("")},2100)}
+function approve(i){$("#q"+i).innerHTML=`<b>${files[i][0]}</b><div class="sp"></div><span style="color:var(--gr)">✓ Approved</span>`;
+ if($$("#queue .btn").length==0){$$(".step")[3].classList.add("done");setTimeout(()=>{$$(".step")[4].classList.add("done");toast("Published to PolarVerse portal")},600)}}
+
+// Social post generator
+const F={"1:1 Instagram Square":"1/1","9:16 Story Cover":"9/16","16:9 YouTube Thumbnail":"16/9"};let fmt="1:1 Instagram Square",lang="English";
+const T={"Ocean Aurora":"linear-gradient(150deg,#0e5f78,#2a3f9c 55%,#6d3fc4)","Deep Ice":"linear-gradient(150deg,#0a1a38,#1c4f8a 60%,#5fb8d8)","Sunrise Polar":"linear-gradient(150deg,#3a3f8f,#c0607a 60%,#f0b060)"};
+const caps={English:["Day 12 in Antarctica: glacier survey complete, and the ice is telling a story. Explore the full data on PolarVerse.","#PolarScience #Antarctica #ClimateAction #OpenData #SIH2026"],Hindi:["अंटार्कटिका में 12वां दिन: ग्लेशियर सर्वेक्षण पूरा। पूरा डेटा PolarVerse पर देखें।","#ध्रुवीयविज्ञान #अंटार्कटिका #जलवायु #ओपनडेटा #SIH2026"]};
+function openPost(){modal.classList.add("on");drawPost()}
+function drawPost(){
+ $("#fmts").innerHTML=Object.keys(F).map(k=>`<button class="chip ${k==fmt?'on':''}" onclick="fmt='${k}';drawPost()">${k}</button>`).join("");
+ $("#langs").innerHTML=["English","Hindi"].map(k=>`<button class="chip ${k==lang?'on':''}" onclick="lang='${k}';drawPost()">${k}</button>`).join("");
+ const p=$("#post"),r=F[fmt];p.style.aspectRatio=r;p.style.background=T[$("#tpl").value];p.style.width=r=="9/16"?"55%":"100%";
+ let q="";for(let i=0;i<49;i++){q+=(i*7+i%5)%3?`<rect x="${i%7}" y="${(i/7)|0}" width="1" height="1"/>`:""}
+ p.innerHTML=`<div><small>🏛 Institute logo · PolarVerse</small></div><div><h2 style="margin:0 0 6px;font-size:${r=="16/9"?"22px":"20px"}">Antarctic Research Expedition 2024</h2><small>${days[2].d} · ${days[2].t}</small></div><small>Credit: Institute Polar Data · CC-BY</small><svg class="qr" viewBox="0 0 7 7"><g fill="#050b1c">${q}</g></svg>`;
+ $("#cap").textContent=caps[lang][0];$("#hash").innerHTML=caps[lang][1].split(" ").map(h=>`<span class="tag">${h}</span>`).join("");
+ $("#alt").textContent="Research vessel beside floating sea ice under a polar sky."}
+function copyCap(){try{navigator.clipboard.writeText(caps[lang].join("\n"))}catch(e){}toast("Caption copied")}
+</script></body></html>
